@@ -21,8 +21,8 @@ body{
 
 .contiene-menuPrincipal{
     background-color: #0080FF;
-    width: 500px;
-    height: 500px;
+    width: 700px;
+    height: 450px;
     border-radius: 15px;
     position: absolute;
     margin: auto;
@@ -30,12 +30,13 @@ body{
 
 .contiene-titulo{
     padding-top: 60px;
-    padding-bottom: 80px;
+    padding-bottom: 60px;
 }
 
 .contiene-btn{
     display: grid;
     gap: 24px;
+    display: inline;
 }
 
 button{
@@ -54,6 +55,27 @@ button{
 button:hover{
     background-color: #006414;
     cursor: pointer;
+}
+
+.img-personaje{
+    height: 200px;
+    width: 200px;
+    border: solid 3px #009929;
+    border-radius: 10px;
+    transition: border-color .2s;
+}
+
+.img-personaje:hover{
+    height: 220px;
+    width: 220px;
+    border-color: #006414;
+    cursor: pointer;
+}
+
+.textos{
+    font-family: "Rubik", sans-serif;
+    font-size: medium;
+    font-weight: 500;
 }
 
 h1{
