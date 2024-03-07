@@ -1,0 +1,89 @@
+.container {
+	background-color: rgba(92, 203, 95, 0.8);
+	border-radius: 7px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	overflow: hidden;
+	width: 400px;
+	max-width: 100%;
+    position: relative;
+    
+}
+
+.background{
+
+    background-image: url("../Imagenes/free-soccer-field-vector.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+
+.wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 130px;
+  margin: 0 15px;
+  max-width: 600px;
+  width: 100%;
+  padding: 0 20px;
+  border-radius: 25px;
+}
+
+.wrapper #icon {
+    font-size: 35px;
+    color: #333;
+    width: 70px;
+    text-align: center;
+  }
+
+  .wrapper input {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 10px;
+    appearance: none;
+    height: 18px;
+    border-radius: 25px;
+    background-color: #ededed;
+    box-shadow: 0 0 0 2px #ededed;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  input::-webkit-slider-thumb {
+    appearance: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background-color: #179341;
+    box-shadow: -208px 0 0 200px #179341;
+  }
+  .wrapper .slide-value {
+    font-size: 27px;
+    font-weight: 500;
+    color: #333;
+    width: 70px;
+    text-align: center;
+  }
+
+  .TituloPantallas{
+    text-align: center;
+  
+}
+
+.boton{
+
+    background-color: #31E354;
+	border: 2px solid #31E354;
+	border-radius: 4px;
+	color: #fff;
+	display: block;
+	font-family: inherit;
+	font-size: 16px;
+	padding: 10px;
+	margin-top: 20px;
+	width: 100%;
+}
+
+
+

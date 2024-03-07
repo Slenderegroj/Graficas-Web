@@ -2,34 +2,39 @@
 <html lang="es">
 <head>
  <title>Configuración</title>
- <link rel="stylesheet" href="/Css/Configuracion.css">
+ <meta charset="UTF-8" />
+ <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+ <link rel="stylesheet" href="../Css/Configuracion.css">
  <link rel="stylesheet" href="http://unicons.iconscout.com/release/v4.0.0/css/line.css">
- <script src="/Js/Configuracion.js"></script>
+ <script src="../Js/Configuracion.js"></script>
 
 </head>
 <body class="background" >
+    <div class="container">
      <h1 Class="TitulosPantalla">Configuración</h1>
 
+     
           
-    <div class="Barra">
+    <div class="wrapper">
         <p Class="TextoSecundario">Volumen de la musica</p>
         <i class="uil uil-volume-mute" id="icon"></i>
         <input type="range" min="0" step="1" max="100" value="0">
-        <span class="slide-value">0</span>
+        <span class="slide-value"></span>
     </div>
 
-    <div class="Barra">
+    <div class="wrapper">
         <p Class="TextoSecundario">Volumen de los efectos</p>
         <i class="uil uil-volume-mute" id="icon"></i>
         <input type="range" min="0" step="1" max="100" value="0">
-        <span class="slide-value">0</span>
+        <span class="slide-value"></span>
     </div>
 
     <div>
-    <button>Confirmar</button>
+    <button class="boton">Regresar</button>
     </div>
 
-
+</div>
 
 
 
