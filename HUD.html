@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUD de Fútbol</title>
+    <link rel="stylesheet" href="styleHUDcss.css">
+</head>
+<body>
+
+<div class="hud">
+    <div class="teams-info">
+        <div class="container" id="marcador">
+            <h3>Marcador</h3>
+            <div class="marcadores">
+                <img src="Imagenes/EquipoVerde.jpg" alt="EquipoVerde">
+                <p>Equipo A: <span id="equipoA">0</span></p>
+                <img src="Imagenes/EquipoAzul.png" alt="EquipoAzul">
+                <p>Equipo B: <span id="equipoB">0</span></p>
+            </div>
+        </div>
+        
+        <div class="container" id="tiempo">
+            <h3>Tiempo</h3>
+            <p><span id="minutos">00</span>:<span id="segundos">00</span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+  // Simulación de actualización del marcador y tiempo (para propósitos de demostración)
+  let marcadorEquipoA = 0;
+  let marcadorEquipoB = 0;
+  let minutos = 0;
+  let segundos = 0;
+
+  setInterval(() => {
+    marcadorEquipoA++;
+    document.getElementById('equipoA').textContent = marcadorEquipoA;
+  }, 5000); // Actualizar el marcador cada 5 segundos
+
+  setInterval(() => {
+    marcadorEquipoB++;
+    document.getElementById('equipoB').textContent = marcadorEquipoB;
+  }, 7000); // Actualizar el marcador cada 7 segundos
+
+  setInterval(() => {
+    segundos++;
+    if (segundos === 60) {
+      segundos = 0;
+      minutos++;
+    }
+    document.getElementById('minutos').textContent = minutos < 10 ? '0' + minutos : minutos;
+    document.getElementById('segundos').textContent = segundos < 10 ? '0' + segundos : segundos;
+  }, 1000); // Actualizar el tiempo cada segundo
+</script>
+
+</body>
+</html>
