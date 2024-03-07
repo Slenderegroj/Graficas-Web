@@ -1,0 +1,39 @@
+
+* {
+	box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-image: url("../Imagenes/juego_a_tema_3_contra_3_con_areas_de_meta_org.jpg");
+    background-size: cover;
+    background-position: center;
+    color: #000;
+    margin: 0;
+}
+
+.container {
+	background-color: rgba(92, 203, 95, 0.8);
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	overflow: hidden;
+	width: 400px;
+	max-width: 100%;
+    position: relative;
+    top: 150px; left: 400px;
+}
+
+
+
+.button {
+        background-color: #0799b6;
+        border: 2px solid #0799b6;
+        border-radius: 4px;
+        color: #fff;
+        display: block;
+        font-family: inherit;
+        font-size: 16px;
+        padding: 10px;
+        margin-top: 20px;
+        width: 100%;
+ }
+
