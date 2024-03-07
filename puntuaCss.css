@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url("/Imagenes/juego_a_tema_3_contra_3_con_areas_de_meta_org.jpg");
+    background-size: cover;
+    background-position: center;
+    color: #000;
+    margin: 0;
+}
+.container {
+    position: relative;
+    width: 70%; /* Ancho del contenedor de la tabla */
+    margin: 0 auto; /* Centra horizontalmente */
+    z-index: 1; /* Asegura que esté delante del video */
+}
+.table-container {
+    height: 50%;
+    width: 100%;
+    align-items: center;
+    justify-content: center; /* Ajusta la altura según tus necesidades */
+    /* Puedes ajustar el tamaño y la posición vertical según sea necesario */
+    background-color: rgba(255, 255, 255, 0.4); /* Color de fondo semi-transparente */
+    padding: 20px; /* Espacio interno */
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+th, td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+    color: #000;
+}
+.team {
+    margin: 10px; /* Ajuste del margen alrededor de las tablas */
+    padding: 10px; /* Ajuste del espacio interior de las tablas */
+    border-radius: 5px; /* Añadir bordes redondeados */
+    overflow: auto;
+}
+.team.green{
+    background-color: rgba(0, 153, 41, 0.4);
+    margin-bottom: 150px;
+}
+.green .player-row td{
+    background-color: rgba(92, 203, 95, 0.8); 
+}
+.team.blue{
+    background-color: rgba(39, 163, 223, 0.4);
+}
+.blue .player-row td{
+    background-color: rgba(65, 182, 239, 0.8);
+}
+.team-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.team-info h1 {
+    margin-left: 5px;
+    margin-right: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.team-info h3{
+    margin-left: 5px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+.Scoreboard-Title{
+    text-align: center;
+}
