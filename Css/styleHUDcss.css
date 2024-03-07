@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url('/Imagenes/juego_a_tema_3_contra_3_con_areas_de_meta_org.jpg');
+    background-image: url('../Imagenes/juego_a_tema_3_contra_3_con_areas_de_meta_org.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
