@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2do avance</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import * as THREE from "./three.module.js";
+      import { OrbitControls } from "./OrbitControls.js";
+      import { GLTFLoader } from './GLTFLoader.js'; //para cargar modelos formato GLB
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color("#566573");
+
+      //MOVI LA CÁMARA PARA QUE ESTPE EN ÁNGULO CENITAL 
+      const camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight
+      );
+      camera.position.set(0, 25, 10); //y = 25
+
+      const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+      scene.add(hemisphereLight);
+
+      // const cube1Geometry = new THREE.BoxGeometry(1, 1, 1);
+      // const cube1Material = new THREE.MeshPhongMaterial({ color: "aqua" });
+      // const cube1 = new THREE.Mesh(cube1Geometry, cube1Material);
+      // cube1.position.set(3, 0, 0);
+      // scene.add(cube1);
+
+      // //Bounding Box del cubo 1
+      // const cube1BB = new THREE.Box3(); //creo la caja de colisión
+      // cube1BB.setFromObject(cube1); //asigno la caja de colisión
+
+      // const cube2Geometry = new THREE.BoxGeometry(1, 1, 1);
+      // const cube2Material = new THREE.MeshPhongMaterial({ color: "coral" });
+      // const cube2 = new THREE.Mesh(cube2Geometry, cube2Material);
+      // cube2.position.set(-3, 0, 0);
+      // scene.add(cube2);
+
+      // const cube2BB = new THREE.Box3();
+      // cube2BB.setFromObject(cube2);
+      //console.log(cube2BB);
+
+      // const sphereGeometry = new THREE.SphereGeometry(1);
+      // const sphereMaterial = new THREE.MeshPhongMaterial({ color: "teal" });
+      // const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      // sphere.position.set(0, 0.5, 0);
+      // scene.add(sphere);
+
+      // //se cambia la forma de la bounding box de la esfera
+      // const sphereBB = new THREE.Sphere(sphere.position, 1);
+
+      //PLANO
+      //AGRANDÉ EL PLANO PARA QUE CUBRA TODO LO QUE VE LA CÁMARA
+      // const geometry = new THREE.PlaneGeometry( 55, 35 );
+      // const material = new THREE.MeshBasicMaterial( {color: "gray", side: THREE.DoubleSide} );
+      // const plane = new THREE.Mesh( geometry, material );
+      // scene.add( plane );
+      // plane.rotation.x = 1.6;
+      // plane.position.y = -.52;
+
+      //Geometría extra 1
+      // const capsula = new THREE.CapsuleGeometry( 0.5, 1, 2, 8 ); 
+      // const capsulaMat = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
+      // const capsule = new THREE.Mesh( capsula, capsulaMat ); 
+      // scene.add( capsule );
+      // capsule.position.x = -6;
+      // capsule.position.y = 0.5;
+      // capsule.position.z = -3.5;
+
+      // const capsulaBB = new THREE.Box3();
+      // capsulaBB.setFromObject(capsule);      
+
+      //Geometría extra 2
+      // const conoGeo = new THREE.ConeGeometry( 0.5, 1, 8 ); 
+      // const conoMat = new THREE.MeshBasicMaterial( {color: "yellow"} );
+      // const cone = new THREE.Mesh(conoGeo, conoMat ); 
+      // scene.add( cone );
+      // cone.position.y = 3;
+
+      // const conoBB = new THREE.Box3();
+      // conoBB.setFromObject(cone);
+
+      //Geometría extra 3
+      // const torusGeo = new THREE.TorusGeometry( 1.25, 0.375, 8, 16 ); 
+      // const torusMat = new THREE.MeshBasicMaterial( { color: "cyan" } ); 
+      // const torus = new THREE.Mesh( torusGeo, torusMat ); 
+      // scene.add( torus );
+      // torus.position.x = 5.8;
+      // torus.position.y = 1.20;
+
+      // const torusBB = new THREE.Box3();
+      // torusBB.setFromObject(torus);
+
+      //Codigo para poder ver las colisiones de las figuras
+       //const box = new THREE.BoxHelper(sphere, 0xffff00);
+       //scene.add(box);
+
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+      const cameraControl = new OrbitControls(camera, renderer.domElement);
+
+      //Evento para que se puedan utilizar las teclas del teclado
+      document.onkeydown = function (e) {
+        // console.log(e);
+
+        // ArrowLeft
+        if (e.keyCode == 37) {
+          //Modifico la posición del CUBO 2
+          cube2.position.x = cube2.position.x - 1;
+        }
+
+        // ArrowRight
+        if (e.keyCode == 39) {
+          cube2.position.x = cube2.position.x + 1;
+        }
+
+        //ArrowUp
+        if (e.keyCode == 38) {
+          cube2.position.z = cube2.position.z - 1;
+        }
+
+        //ArrowDown
+        if (e.keyCode == 40) {
+          cube2.position.z = cube2.position.z + 1;
+        }
+        console.log(e);
+      };
+
+      function checkCollitions() {
+        //cubo 2 dentro de cubo 1
+        if (cube2BB.containsBox(cube1BB)) {
+          cube1.scale.y = 3;
+        } else {
+          cube1.scale.y = 1;
+        }
+
+        //Cubo 2 toca cubo 1
+        if (cube2BB.intersectsBox(cube1BB)) {
+          cube1.material.color = new THREE.Color("red");
+        } else {
+          cube1.material.color = new THREE.Color("aqua");
+        }
+
+        //Cubo 2 toca la esfera
+        if (cube2BB.intersectsSphere(sphereBB)) {
+          sphere.material.wireframe = true;
+        } else {
+          sphere.material.wireframe = false;
+        }
+
+        //Cubo 2 toca capsula
+        if (cube2BB.intersectsBox(capsulaBB)) {
+          capsule.material.wireframe = true;
+        } else {
+          capsule.material.wireframe = false;
+        }
+
+        //Cubo toca cono
+        if (cube2BB.intersectsBox(conoBB)) {
+          cone.material.color = new THREE.Color("blue");
+        } else {
+          cone.material.color = new THREE.Color("yellow");
+        }
+
+        //cubo dentro de cono
+        if (cube2BB.containsBox(conoBB)) {
+          cone.material.wireframe = true;
+        } else {
+          cone.material.wireframe = false;
+        }
+
+        //cubo toca torus
+        if (cube2BB.intersectsBox(torusBB)) {
+          torus.material.color = new THREE.Color("orange");
+          torus.material.wireframe = true;
+        } else {
+          torus.material.color = new THREE.Color("cyan");
+          torus.material.wireframe = false;
+        }
+      }
+
+
+      function animate() {
+        cube2BB.copy(cube2.geometry.boundingBox).applyMatrix4(cube2.matrixWorld);
+        requestAnimationFrame(animate);
+
+        //Función para detectar colisiones
+        //Dentro de animate para comprobar en todo momento si hay colisión
+        checkCollitions();
+        renderer.render(scene, camera);
+      }
+
+      //Importar modelos
+
+      //niño 1
+      const loaderGLFT = new GLTFLoader();
+      loaderGLFT.load("modelos/fhc_crying_child.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(2.5, 2.5, 2.5);
+        obj.position.set(-5,-0.55,1.5);
+      
+        scene.add(obj)
+      });
+
+      //niño 2
+      const ninio2 = new GLTFLoader();
+      loaderGLFT.load("modelos/gregory.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(2.5, 2.5, 2.5);
+        obj.position.set(0, -0.75, 5);
+      
+        scene.add(obj)
+      });
+
+      //suelo CAMPO FUTBOL
+      // const canchaFut = new GLTFLoader();
+      // loaderGLFT.load("modelos/football_field.glb", 
+      // function(modelGLFT){
+      //   const obj = modelGLFT.scene;
+      //   obj.scale.set(1, 1, 1);
+      //   obj.position.set(0, -3, 0);
+      //   obj.rotation.set(0, 1.55, 0);
+      
+      //   scene.add(obj)
+      // });
+
+      //suelo Parque
+      const parque = new GLTFLoader();
+      loaderGLFT.load("modelos/city_park_at_sunset.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(1, 1, 1);
+        obj.position.set(0, -1, 0);
+        obj.rotation.set(0, 0, 0);
+      
+        scene.add(obj)
+      });
+
+      //caja madera
+      const cajaMadera = new GLTFLoader();
+      loaderGLFT.load("modelos/crate_box.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.02, 0.02, 0.02);
+        obj.position.set(10, -0.5, 0);
+      
+        scene.add(obj)
+      });
+
+      const cajaMadera2 = new GLTFLoader();
+      loaderGLFT.load("modelos/crate_box.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.02, 0.02, 0.02);
+        obj.position.set(10, -0.5, 1.5);
+      
+        scene.add(obj)
+      });
+
+      const cajaMadera3 = new GLTFLoader();
+      loaderGLFT.load("modelos/crate_box.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.02, 0.02, 0.02);
+        obj.position.set(11.5, -0.5, 1.5);
+      
+        scene.add(obj)
+      });
+
+      //caja carton
+      const cajaCarton = new GLTFLoader();
+      loaderGLFT.load("modelos/box.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(1, 1, 1);
+        obj.position.set(-18, 0.5, -6);
+      
+        scene.add(obj)
+      });
+
+      const cajaCarton2 = new GLTFLoader();
+      loaderGLFT.load("modelos/box.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(1, 1, 1);
+        obj.position.set(-21, 0, -3);
+      
+        scene.add(obj)
+      });
+
+      const cajaCarton3 = new GLTFLoader();
+      loaderGLFT.load("modelos/box.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(1, 1, 1);
+        obj.position.set(-18, 0, 0);
+      
+        scene.add(obj)
+      });
+
+      //balon
+      const balon = new GLTFLoader();
+      loaderGLFT.load("modelos/soccer_ball.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.55, 0.55, 0.55);
+        obj.position.set(5, 0.5, 0);
+      
+        scene.add(obj)
+      });
+
+      //carro oxidado
+      const carroMalo = new GLTFLoader();
+      loaderGLFT.load("modelos/old_car_wreck.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.06, 0.06, 0.06);
+        obj.position.set(-6, -1.25, 10);
+        obj.rotation.set(0, 80, 0); //rotaciones
+      
+        scene.add(obj)
+      });
+
+      const carroMalo2 = new GLTFLoader();
+      loaderGLFT.load("modelos/old_car_wreck.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.06, 0.06, 0.06);
+        obj.position.set(6, -1.25, -15);
+        obj.rotation.set(0, 0, 0); //rotaciones
+      
+        scene.add(obj)
+      });
+
+      //Carro que parece camioneta
+      const carroCamioneta = new GLTFLoader();
+      loaderGLFT.load("modelos/old_car_-_vaz_2107.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.025, 0.025, 0.025);
+        obj.position.set(15, -0.5, -12);
+        obj.rotation.set(0, 0, 0);
+      
+        scene.add(obj)
+      });
+
+      //carro policia
+      const carroPoli = new GLTFLoader();
+      loaderGLFT.load("modelos/police_car.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(2, 2, 2);
+        obj.position.set(20, -0.5, 8);
+        obj.rotation.set(0, 80, 0);
+      
+        scene.add(obj)
+      });
+
+      //cono trafico
+      const cono = new GLTFLoader();
+      loaderGLFT.load("modelos/traffic_cone.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(2, 2, 2);
+        obj.position.set(0, -0.85, 10);
+      
+        scene.add(obj)
+      });
+
+      const cono2 = new GLTFLoader();
+      loaderGLFT.load("modelos/traffic_cone.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(3, 3, 3);
+        obj.position.set(-5, -0.55, 0);
+      
+        scene.add(obj)
+      });
+
+      const cono3 = new GLTFLoader();
+      loaderGLFT.load("modelos/traffic_cone.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(3, 3, 3);
+        obj.position.set(-5, -0.45, -1.5);
+      
+        scene.add(obj)
+      });
+
+      const cono4 = new GLTFLoader();
+      loaderGLFT.load("modelos/traffic_cone.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(3, 3, 3);
+        obj.position.set(-5, -0.4, -3);
+      
+        scene.add(obj)
+      });
+
+      //Chango
+      const chango = new GLTFLoader();
+      loaderGLFT.load("modelos/cymbal_monkey.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.03, 0.03, 0.03);
+        obj.position.set(10, 0, -8);
+        obj.rotation.set(5, 0, 0);
+      
+        scene.add(obj)
+      });
+
+      //rayo
+      const rayo = new GLTFLoader();
+      loaderGLFT.load("modelos/lightning_bolt.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.2, 0.2, 0.2);
+        obj.position.set(-15, 0, -2);
+        obj.rotation.set(-8, 0, 0);
+      
+        scene.add(obj)
+      });
+
+      //puntos dobles
+      const dobles = new GLTFLoader();
+      loaderGLFT.load("modelos/double_points_pickup.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(10, 10, 10);
+        obj.position.set(2.5, 0, 8);
+        obj.rotation.set(-8, 0, 0);
+      
+        scene.add(obj)
+      });
+
+      //banca de parque
+      const banca = new GLTFLoader();
+      loaderGLFT.load("modelos/park_bench.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.03, 0.03, 0.03);
+        obj.position.set(0, -0.8, -12);
+      
+        scene.add(obj)
+      });
+
+      const banca2 = new GLTFLoader();
+      loaderGLFT.load("modelos/park_bench.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.03, 0.03, 0.03);
+        obj.position.set(-10, -0.8, 4.5);
+        obj.rotation.set(0, 3.15, 0);
+      
+        scene.add(obj)
+      });
+
+      //Policia
+      const policia = new GLTFLoader();
+      loaderGLFT.load("modelos/15_bob_police_m_05.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(4, 4, 4);
+        obj.position.set(7, -0.5, -3);
+      
+        scene.add(obj)
+      });
+
+      //Arbol
+      const arbol = new GLTFLoader();
+      loaderGLFT.load("modelos/cartoon_tree.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(2, 2, 2);
+        obj.position.set(-10, 0, -10);
+      
+        scene.add(obj)
+      });
+
+      const arbol2 = new GLTFLoader();
+      loaderGLFT.load("modelos/cartoon_tree.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(2, 2, 2);
+        obj.position.set(10, 0, 10);
+      
+        scene.add(obj)
+      });
+
+      //abuela
+      const abue = new GLTFLoader();
+      loaderGLFT.load("modelos/stylized_grandma.glb", 
+      function(modelGLFT){
+        const obj = modelGLFT.scene;
+        obj.scale.set(0.7, 0.7, 0.7);
+        obj.position.set(-10, 0, -8);
+      
+        scene.add(obj)
+      });
+
+      const loaderGLTF = new GLTFLoader();
+    loaderGLTF.load("gregory_1983_crying_child_model_edit.glb", 
+    function(modeloGLTF){
+      console.log(modeloGLTF);
+      const obj = modeloGLTF.scene;
+      obj.scale.set(2, 2, 2);
+      obj.position.set(2.5, -0.55, 1.5);
+      scene.add(obj)
+
+      //SE ACTIVA LA ANIM, NO SE CREA UNA NUEVA
+      const mixer = new THREE.AnimationMixer(obj);
+      const clips = modeloGLTF.animations;
+      clips.forEach(clip => {
+        mixer.clipAction(clip).play();
+      });
+
+      function update() {
+        mixer.update(0.01);
+      }
+
+      renderer.setAnimationLoop(() => {
+        update();
+        renderer.render(scene, camera);
+      });
+    });
+
+      // const rabbit = new GLTFLoader();
+      // loaderGLFT.load("cute_rabbit_model.glb", 
+      // function(modelGLFT){
+      //   const obj = modelGLFT.scene;
+      //   obj.scale.set(0.08, 0.08, 0.08);
+      //   obj.position.set(0, 0, 2.5);
+      
+      //   scene.add(obj)
+      // });
+
+      animate();
+    </script>
+  </body>
+</html>
