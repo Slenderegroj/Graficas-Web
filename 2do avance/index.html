@@ -16,169 +16,83 @@
       import { OrbitControls } from "./OrbitControls.js";
       import { GLTFLoader } from './GLTFLoader.js'; //para cargar modelos formato GLB
 
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+      import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js"
+      import { } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js"
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDAIB-zlORXvojGyx4clO-bGU8-yBE7JVI",
+        authDomain: "coordenadas-a7e5d.firebaseapp.com",
+        databaseURL: "https://coordenadas-a7e5d-default-rtdb.firebaseio.com",
+        projectId: "coordenadas-a7e5d",
+        storageBucket: "coordenadas-a7e5d.appspot.com",
+        messagingSenderId: "19166009959",
+        appId: "1:19166009959:web:51b35293af3a8f703952c2"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+
       const scene = new THREE.Scene();
       scene.background = new THREE.Color("#566573");
 
       //MOVI LA CÁMARA PARA QUE ESTPE EN ÁNGULO CENITAL 
       const camera = new THREE.PerspectiveCamera(
         45,
-        window.innerWidth / window.innerHeight
+        window.innerWidth / window.innerHeight,
+        1,
+        100
       );
       camera.position.set(0, 25, 10); //y = 25
 
       const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
       scene.add(hemisphereLight);
 
-      // const cube1Geometry = new THREE.BoxGeometry(1, 1, 1);
-      // const cube1Material = new THREE.MeshPhongMaterial({ color: "aqua" });
-      // const cube1 = new THREE.Mesh(cube1Geometry, cube1Material);
-      // cube1.position.set(3, 0, 0);
-      // scene.add(cube1);
-
-      // //Bounding Box del cubo 1
-      // const cube1BB = new THREE.Box3(); //creo la caja de colisión
-      // cube1BB.setFromObject(cube1); //asigno la caja de colisión
-
-      // const cube2Geometry = new THREE.BoxGeometry(1, 1, 1);
-      // const cube2Material = new THREE.MeshPhongMaterial({ color: "coral" });
-      // const cube2 = new THREE.Mesh(cube2Geometry, cube2Material);
-      // cube2.position.set(-3, 0, 0);
-      // scene.add(cube2);
-
-      // const cube2BB = new THREE.Box3();
-      // cube2BB.setFromObject(cube2);
-      //console.log(cube2BB);
-
-      // const sphereGeometry = new THREE.SphereGeometry(1);
-      // const sphereMaterial = new THREE.MeshPhongMaterial({ color: "teal" });
-      // const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-      // sphere.position.set(0, 0.5, 0);
-      // scene.add(sphere);
-
-      // //se cambia la forma de la bounding box de la esfera
-      // const sphereBB = new THREE.Sphere(sphere.position, 1);
-
-      //PLANO
-      //AGRANDÉ EL PLANO PARA QUE CUBRA TODO LO QUE VE LA CÁMARA
-      // const geometry = new THREE.PlaneGeometry( 55, 35 );
-      // const material = new THREE.MeshBasicMaterial( {color: "gray", side: THREE.DoubleSide} );
-      // const plane = new THREE.Mesh( geometry, material );
-      // scene.add( plane );
-      // plane.rotation.x = 1.6;
-      // plane.position.y = -.52;
-
-      //Geometría extra 1
-      // const capsula = new THREE.CapsuleGeometry( 0.5, 1, 2, 8 ); 
-      // const capsulaMat = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
-      // const capsule = new THREE.Mesh( capsula, capsulaMat ); 
-      // scene.add( capsule );
-      // capsule.position.x = -6;
-      // capsule.position.y = 0.5;
-      // capsule.position.z = -3.5;
-
-      // const capsulaBB = new THREE.Box3();
-      // capsulaBB.setFromObject(capsule);      
-
-      //Geometría extra 2
-      // const conoGeo = new THREE.ConeGeometry( 0.5, 1, 8 ); 
-      // const conoMat = new THREE.MeshBasicMaterial( {color: "yellow"} );
-      // const cone = new THREE.Mesh(conoGeo, conoMat ); 
-      // scene.add( cone );
-      // cone.position.y = 3;
-
-      // const conoBB = new THREE.Box3();
-      // conoBB.setFromObject(cone);
-
-      //Geometría extra 3
-      // const torusGeo = new THREE.TorusGeometry( 1.25, 0.375, 8, 16 ); 
-      // const torusMat = new THREE.MeshBasicMaterial( { color: "cyan" } ); 
-      // const torus = new THREE.Mesh( torusGeo, torusMat ); 
-      // scene.add( torus );
-      // torus.position.x = 5.8;
-      // torus.position.y = 1.20;
-
-      // const torusBB = new THREE.Box3();
-      // torusBB.setFromObject(torus);
-
-      //Codigo para poder ver las colisiones de las figuras
-       //const box = new THREE.BoxHelper(sphere, 0xffff00);
-       //scene.add(box);
-
       const renderer = new THREE.WebGLRenderer();
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
+
       const cameraControl = new OrbitControls(camera, renderer.domElement);
 
-      //Evento para que se puedan utilizar las teclas del teclado
-      document.onkeydown = function (e) {
-        // console.log(e);
+      function resize(){
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.render(scene,camera);
+      }
 
-        // ArrowLeft
-        if (e.keyCode == 37) {
-          //Modifico la posición del CUBO 2
-          cube2.position.x = cube2.position.x - 1;
-        }
+      window.addEventListener("resize", resize);
 
-        // ArrowRight
-        if (e.keyCode == 39) {
-          cube2.position.x = cube2.position.x + 1;
-        }
+      // Variables para el movimiento
+      const movementSpeed = 0.1;
+      const rotationSpeed = 0.05;
+      const keys = {}; // Objeto para mantener el estado de las teclas
+      let model;
 
-        //ArrowUp
-        if (e.keyCode == 38) {
-          cube2.position.z = cube2.position.z - 1;
-        }
+      function loadModel(url, position) {
+        const loader = new GLTFLoader();
+        loader.load(url, (gltf) => {
+          model = gltf.scene;
+          model.position.copy(position);
+          model.scale.set(2.5, 2.5, 2.5);
+          scene.add(model);
 
-        //ArrowDown
-        if (e.keyCode == 40) {
-          cube2.position.z = cube2.position.z + 1;
-        }
-        console.log(e);
-      };
+          if (url === "modelos/fhc_crying_child.glb") {
+            camera.position.set(model.position.x, model.position.y + 30, model.position.z);
+            camera.lookAt(model.position);
+          }
+        });
+      }
+
+      loadModel("modelos/fhc_crying_child.glb", new THREE.Vector3(0, -0.75, 0));
+
 
       function checkCollitions() {
-        //cubo 2 dentro de cubo 1
-        if (cube2BB.containsBox(cube1BB)) {
-          cube1.scale.y = 3;
-        } else {
-          cube1.scale.y = 1;
-        }
-
-        //Cubo 2 toca cubo 1
-        if (cube2BB.intersectsBox(cube1BB)) {
-          cube1.material.color = new THREE.Color("red");
-        } else {
-          cube1.material.color = new THREE.Color("aqua");
-        }
-
-        //Cubo 2 toca la esfera
-        if (cube2BB.intersectsSphere(sphereBB)) {
-          sphere.material.wireframe = true;
-        } else {
-          sphere.material.wireframe = false;
-        }
-
-        //Cubo 2 toca capsula
-        if (cube2BB.intersectsBox(capsulaBB)) {
-          capsule.material.wireframe = true;
-        } else {
-          capsule.material.wireframe = false;
-        }
-
-        //Cubo toca cono
-        if (cube2BB.intersectsBox(conoBB)) {
-          cone.material.color = new THREE.Color("blue");
-        } else {
-          cone.material.color = new THREE.Color("yellow");
-        }
-
-        //cubo dentro de cono
-        if (cube2BB.containsBox(conoBB)) {
-          cone.material.wireframe = true;
-        } else {
-          cone.material.wireframe = false;
-        }
-
+        
         //cubo toca torus
         if (cube2BB.intersectsBox(torusBB)) {
           torus.material.color = new THREE.Color("orange");
@@ -187,17 +101,6 @@
           torus.material.color = new THREE.Color("cyan");
           torus.material.wireframe = false;
         }
-      }
-
-
-      function animate() {
-        cube2BB.copy(cube2.geometry.boundingBox).applyMatrix4(cube2.matrixWorld);
-        requestAnimationFrame(animate);
-
-        //Función para detectar colisiones
-        //Dentro de animate para comprobar en todo momento si hay colisión
-        checkCollitions();
-        renderer.render(scene, camera);
       }
 
       //Importar modelos
@@ -223,6 +126,8 @@
       
         scene.add(obj)
       });
+
+      
 
       //suelo CAMPO FUTBOL
       // const canchaFut = new GLTFLoader();
@@ -545,6 +450,40 @@
       
       //   scene.add(obj)
       // });
+
+      function handleMovement() {
+        // Actualizar estado de las teclas presionadas
+        window.addEventListener("keydown", (event) => {
+          keys[event.key] = true;
+        });
+        window.addEventListener("keyup", (event) => {
+          keys[event.key] = false;
+        });
+
+        // Actualizar posición de jugador según las teclas presionadas
+        if (model) {
+          if (keys["ArrowUp"]) model.position.z -= movementSpeed;
+          if (keys["ArrowDown"]) model.position.z += movementSpeed;
+          if (keys["ArrowLeft"]) model.position.x -= movementSpeed;
+          if (keys["ArrowRight"]) model.position.x += movementSpeed;
+
+          if(model){
+            camera.position.set(model.position.x, model.position.y + 30, model.position.z);
+            camera.lookAt(model.position);
+          }
+
+        };
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        handleMovement();
+        //Función para detectar colisiones
+        //Dentro de animate para comprobar en todo momento si hay colisión
+        //checkCollitions();
+        renderer.render(scene, camera);
+      }
 
       animate();
     </script>
