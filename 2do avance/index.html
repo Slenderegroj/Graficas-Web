@@ -11,6 +11,8 @@
     </style>
   </head>
   <body>
+    <!--<button type="button" id="button-login">Login</button>
+    <button type="button" id="button-logout">Logout</button>-->
     <script type="module">
       import * as THREE from "./three.module.js";
       import { OrbitControls } from "./OrbitControls.js";
@@ -18,8 +20,8 @@
 
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-      import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js"
-      import { } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js"
+      import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js"
+      import { getDatabase, ref, set , onValue } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js"
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -36,6 +38,91 @@
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      const db = getDatabase();
+
+      const buttonLogin = document.getElementById("button-login");
+      const buttonLogout = document.getElementById("button-logout");
+
+      const currentUser = {};
+
+
+      //Login
+      /*buttonLogin.addEventListener("click", async() =>{
+        await signInWithPopup(auth, provider)
+          .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            currentUser  = result.user;
+            console.log(currentUser);
+            writeUserData(currentUser.uid, 0, 0)
+            // IdP data available using getAdditionalUserInfo(result)
+            // ...
+          }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            // ...
+          });
+      })
+
+      //Logout
+      buttonLogout.addEventListener("click", async() =>{
+        await signOut(auth).then(() => {
+          // Sign-out successful.
+          console.log('Sign-out successful');
+        }).catch((error) => {
+          // An error happened.
+          console.log('un error ocurrio', error);
+        });
+      });
+
+      //Leer Datos
+      const starCountRef = ref(db, 'jugadores');
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        Object.entries(data).forEach(([key,value]) =>{
+          //console.log(`${key} ${value.x}  ${value.z}`);
+
+          const jugador = scene.getObjectByName(key);
+
+          //Si el jugador no existe se agrega a la escena
+          if(!jugador){
+            const loaderGLFT = new GLTFLoader();
+            loaderGLFT.load("modelos/fhc_crying_child.glb", 
+            function(modelGLFT){
+              const obj = modelGLFT.scene;
+              obj.scale.set(2.5, 2.5, 2.5);
+              obj.position.set(value.x,-0.55,value.z);
+              obj.name = key;
+              scene.add(obj)
+            });
+          }
+          else{
+            scene.getObjectByName(key).position.x = value.x;
+            scene.getObjectByName(key).position.z = value.z;
+          }          
+         
+        })
+
+        //console.log(data);
+      });
+
+      //Escribir Datos
+      function writeUserData(userId, positionX, positionZ) {
+        set(ref(db, 'jugadores/' + userId), {
+          x: positionX,
+          z: positionZ,
+        });
+      }
+      */
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color("#566573");
@@ -116,15 +203,17 @@
         scene.add(obj)
       });
 
+      let gregory;
+
       //niño 2
       const ninio2 = new GLTFLoader();
       loaderGLFT.load("modelos/gregory.glb", 
       function(modelGLFT){
-        const obj = modelGLFT.scene;
-        obj.scale.set(2.5, 2.5, 2.5);
-        obj.position.set(0, -0.75, 5);
+        gregory = modelGLFT.scene;
+        gregory.scale.set(2.5, 2.5, 2.5);
+        gregory.position.set(0, -0.75, 5);
       
-        scene.add(obj)
+        scene.add(gregory)
       });
 
       
@@ -215,16 +304,38 @@
         scene.add(obj)
       });
 
+      let balonObj;
+
       //balon
       const balon = new GLTFLoader();
       loaderGLFT.load("modelos/soccer_ball.glb", 
       function(modelGLFT){
-        const obj = modelGLFT.scene;
-        obj.scale.set(0.55, 0.55, 0.55);
-        obj.position.set(5, 0.5, 0);
+        balonObj = modelGLFT.scene;
+        balonObj.scale.set(0.55, 0.55, 0.55);
+        balonObj.position.set(5, 0.5, 0);
       
-        scene.add(obj)
+        scene.add(balonObj);
+
+        animateBalon();
       });
+
+      function animateBalon() {
+        // Obtener el tiempo transcurrido desde el inicio de la animación
+        const tiempo = Date.now() * 0.001;
+
+        // Definir la velocidad de rotación en radianes por segundo
+        const velocidadRotacion = 1;
+
+        // Calcular la rotación en cada eje
+        const rotX = Math.sin(tiempo * velocidadRotacion) * Math.PI * 0.25;
+        const rotY = Math.cos(tiempo * velocidadRotacion) * Math.PI * 0.25;
+
+        // Aplicar la rotación al objeto del balón
+        balonObj.rotation.set(rotX, rotY, 0);
+
+        // Solicitar al navegador que actualice la animación en el próximo cuadro
+        requestAnimationFrame(animateBalon);
+      }
 
       //carro oxidado
       const carroMalo = new GLTFLoader();
@@ -415,7 +526,7 @@
         scene.add(obj)
       });
 
-      const loaderGLTF = new GLTFLoader();
+    const loaderGLTF = new GLTFLoader();
     loaderGLTF.load("gregory_1983_crying_child_model_edit.glb", 
     function(modeloGLTF){
       console.log(modeloGLTF);
@@ -424,22 +535,168 @@
       obj.position.set(2.5, -0.55, 1.5);
       scene.add(obj)
 
-      //SE ACTIVA LA ANIM, NO SE CREA UNA NUEVA
-      const mixer = new THREE.AnimationMixer(obj);
-      const clips = modeloGLTF.animations;
-      clips.forEach(clip => {
-        mixer.clipAction(clip).play();
+      const animationClips = modeloGLTF.animations;
+      if (animationClips.length >= 7) {
+          const segundaAnimacion = animationClips[6]; // La segunda animación
+          const mixer = new THREE.AnimationMixer(obj);
+          const action = mixer.clipAction(segundaAnimacion);
+          action.play();
+
+          let lastTime = 0;
+          
+          // Actualiza el mixer
+          function update(time) {
+              const delta = time - lastTime;
+              lastTime = time;
+              mixer.update(delta / 1000); // Convertir a segundos
+          }
+
+          renderer.setAnimationLoop((time) => {
+              update(time);
+              renderer.render(scene, camera);
+          });
+      } else {
+          console.error("El modelo no tiene suficientes animaciones.");
+      }
+    });
+
+    let chloe;
+
+    const chava = new GLTFLoader();
+      loaderGLFT.load("chloe_price_-_life_is_strange.glb", 
+      function(modelGLFT){
+        console.log(modelGLFT);
+        chloe = modelGLFT.scene;
+        chloe.scale.set(2, 2, 2);
+        chloe.position.set(-5, 0, -8);
+      
+        scene.add(chloe);
+
+        const animationClips = modelGLFT.animations;
+        if (animationClips.length >= 1) {
+            const segundaAnimacion = animationClips[0]; // La segunda animación
+            const mixer = new THREE.AnimationMixer(chloe);
+            const action = mixer.clipAction(segundaAnimacion);
+            action.play();
+
+            let lastTime = 0;
+            
+            // Actualiza el mixer
+            function update(time) {
+                const delta = time - lastTime;
+                lastTime = time;
+                mixer.update(delta / 1000); // Convertir a segundos
+            }
+
+            renderer.setAnimationLoop((time) => {
+                update(time);
+                renderer.render(scene, camera);
+            });
+        } else {
+            console.error("El modelo no tiene suficientes animaciones.");
+        }
       });
 
-      function update() {
-        mixer.update(0.01);
+    /*
+    const policiaChido = new GLTFLoader();
+    loaderGLTF.load("modelosAnimaciones/policeman_-_low_poly_character_with_animation.glb", 
+    function(modeloGLTF){
+      console.log(modeloGLTF);
+      const obj = modeloGLTF.scene;
+      obj.scale.set(2, 2, 2);
+      obj.position.set(-2.5, -0.55, -1.5);
+      scene.add(obj)
+
+      // Busca la segunda animación
+      const animationClips = modeloGLTF.animations;
+      if (animationClips.length >= 2) {
+          const segundaAnimacion = animationClips[1]; // La segunda animación
+          const mixer = new THREE.AnimationMixer(obj);
+          const action = mixer.clipAction(segundaAnimacion);
+          action.play();
+
+          // Actualiza el mixer
+          function update() {
+              mixer.update(0.01);
+          }
+
+          renderer.setAnimationLoop(() => {
+              update();
+              renderer.render(scene, camera);
+          });
+      } else {
+          console.error("El modelo no tiene suficientes animaciones.");
+      }
+    });
+
+    */
+
+    const perrito = new GLTFLoader();
+    loaderGLTF.load("modelosAnimaciones/animated_dog_shiba_inu.glb", 
+    function(modeloGLTF){
+      console.log(modeloGLTF);
+      const obj = modeloGLTF.scene;
+      obj.scale.set(.025, .025, .025);
+      obj.position.set(8, -0.55,8);
+      scene.add(obj)
+
+      // Busca la segunda animación
+      const animationClips = modeloGLTF.animations;
+      if (animationClips.length >= 2) {
+          const segundaAnimacion = animationClips[1]; // La segunda animación
+          const mixer = new THREE.AnimationMixer(obj);
+          const action = mixer.clipAction(segundaAnimacion);
+          action.play();
+
+          let lastTime = 0;
+          
+          // Actualiza el mixer
+          function update(time) {
+              const delta = time - lastTime;
+              lastTime = time;
+              mixer.update(delta / 1000); // Convertir a segundos
+          }
+
+          renderer.setAnimationLoop((time) => {
+              update(time);
+              renderer.render(scene, camera);
+          });
+      } else {
+          console.error("El modelo no tiene suficientes animaciones.");
+      }
+    });
+
+    /*
+
+    document.onkeydown = function (e) {
+      const jugadorActual = scene.getObjectByName(currentUser.uid);
+      console.log(e.keyCode);
+
+      //Tecla W
+      if(e.keyCode == 87){
+        jugadorActual.position.x = jugadorActual.position.x - 1;
+      }
+      //Tecla S
+      if(e.keyCode == 83){
+        jugadorActual.position.x = jugadorActual.position.x + 1;
+      }
+      //Tecla A
+      if(e.keyCode == 65){
+        jugadorActual.position.z = jugadorActual.position.z - 1;
+      }
+      //Tecla D
+      if(e.keyCode == 68){
+        jugadorActual.position.z = jugadorActual.position.z + 1;
       }
 
-      renderer.setAnimationLoop(() => {
-        update();
-        renderer.render(scene, camera);
-      });
-    });
+      writeUserData(
+        currentUser.uid,
+        jugadorActual.position.x, 
+        jugadorActual.position.z 
+      );
+    }
+
+    */
 
       // const rabbit = new GLTFLoader();
       // loaderGLFT.load("cute_rabbit_model.glb", 
@@ -470,6 +727,13 @@
           if(model){
             camera.position.set(model.position.x, model.position.y + 30, model.position.z);
             camera.lookAt(model.position);
+          }
+
+          if (gregory) { // Reemplaza 'otroModelo' con el nombre de tu segundo modelo
+            if (keys["w"]) gregory.position.z -= movementSpeed; // Por ejemplo, para mover hacia adelante con la tecla 'w'
+            if (keys["s"]) gregory.position.z += movementSpeed; // Para mover hacia atrás con la tecla 's'
+            if (keys["a"]) gregory.position.x -= movementSpeed; // Para mover hacia la izquierda con la tecla 'a'
+            if (keys["d"]) gregory.position.x += movementSpeed; // Para mover hacia la derecha con la tecla 'd'
           }
 
         };
