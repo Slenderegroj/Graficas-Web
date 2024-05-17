@@ -168,6 +168,13 @@
           model.scale.set(2.5, 2.5, 2.5);
           scene.add(model);
 
+          this._BB = new THREE.Box3();
+                this._Mesh = this._Controls._target;
+                this._BB.setFromObject(this._Controls._target);
+                this._boxHelper = new THREE.Box3Helper( this._BB, 0xff0000 );
+                this._boxHelper.updateMatrixWorld(true);
+                this._Scene.add(this._boxHelper);
+
           if (url === "modelos/fhc_crying_child.glb") {
             camera.position.set(model.position.x, model.position.y + 30, model.position.z);
             camera.lookAt(model.position);
@@ -194,13 +201,16 @@
 
       //niño 1
       const loaderGLFT = new GLTFLoader();
-      loaderGLFT.load("modelos/fhc_crying_child.glb", 
+      loaderGLFT.load("modelos/gregory.glb", 
       function(modelGLFT){
         const obj = modelGLFT.scene;
         obj.scale.set(2.5, 2.5, 2.5);
         obj.position.set(-5,-0.55,1.5);
       
         scene.add(obj)
+
+        
+
       });
 
       let gregory;
@@ -251,6 +261,10 @@
         obj.position.set(10, -0.5, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const cajaMadera2 = new GLTFLoader();
@@ -261,6 +275,10 @@
         obj.position.set(10, -0.5, 1.5);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const cajaMadera3 = new GLTFLoader();
@@ -271,6 +289,10 @@
         obj.position.set(11.5, -0.5, 1.5);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //caja carton
@@ -282,6 +304,10 @@
         obj.position.set(-18, 0.5, -6);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const cajaCarton2 = new GLTFLoader();
@@ -292,6 +318,10 @@
         obj.position.set(-21, 0, -3);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const cajaCarton3 = new GLTFLoader();
@@ -302,6 +332,10 @@
         obj.position.set(-18, 0, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       let balonObj;
@@ -315,6 +349,11 @@
         balonObj.position.set(5, 0.5, 0);
       
         scene.add(balonObj);
+
+        //caja colisión
+        const box = new THREE.Box3().setFromObject(balonObj); 
+        const boxHelper = new THREE.BoxHelper(balonObj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
 
         animateBalon();
       });
@@ -347,6 +386,10 @@
         obj.rotation.set(0, 80, 0); //rotaciones
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const carroMalo2 = new GLTFLoader();
@@ -358,6 +401,10 @@
         obj.rotation.set(0, 0, 0); //rotaciones
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //Carro que parece camioneta
@@ -370,6 +417,10 @@
         obj.rotation.set(0, 0, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //carro policia
@@ -382,6 +433,10 @@
         obj.rotation.set(0, 80, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //cono trafico
@@ -393,6 +448,10 @@
         obj.position.set(0, -0.85, 10);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const cono2 = new GLTFLoader();
@@ -403,6 +462,10 @@
         obj.position.set(-5, -0.55, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const cono3 = new GLTFLoader();
@@ -413,6 +476,10 @@
         obj.position.set(-5, -0.45, -1.5);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const cono4 = new GLTFLoader();
@@ -423,6 +490,10 @@
         obj.position.set(-5, -0.4, -3);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //Chango
@@ -435,6 +506,10 @@
         obj.rotation.set(5, 0, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //rayo
@@ -447,6 +522,10 @@
         obj.rotation.set(-8, 0, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //puntos dobles
@@ -459,6 +538,10 @@
         obj.rotation.set(-8, 0, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //banca de parque
@@ -470,6 +553,10 @@
         obj.position.set(0, -0.8, -12);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const banca2 = new GLTFLoader();
@@ -481,6 +568,10 @@
         obj.rotation.set(0, 3.15, 0);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //Policia
@@ -492,6 +583,10 @@
         obj.position.set(7, -0.5, -3);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //Arbol
@@ -503,6 +598,10 @@
         obj.position.set(-10, 0, -10);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       const arbol2 = new GLTFLoader();
@@ -513,6 +612,10 @@
         obj.position.set(10, 0, 10);
       
         scene.add(obj)
+
+        const box = new THREE.Box3().setFromObject(obj); //calcular caja de colisión
+        const boxHelper = new THREE.BoxHelper(obj, 0xff0000); //ver caja de colisión
+        scene.add(boxHelper);
       });
 
       //abuela
@@ -746,6 +849,13 @@
         //Función para detectar colisiones
         //Dentro de animate para comprobar en todo momento si hay colisión
         //checkCollitions();
+         box.setFromObject(obj); //actualizar caja si el modelo se mueve o cambia tamaño
+         boxHelper.update();
+
+         if(this._BB && this._Mesh && (this._IsMainPlayer == true)){
+                this._BB.setFromObject(this._Mesh);
+            }
+
         renderer.render(scene, camera);
       }
 
